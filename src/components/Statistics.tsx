@@ -93,45 +93,46 @@ const Statistics: React.FC = () => {
 
   return (
     <div className="mb-8 space-y-6">
-      {/* 统计卡片网格 */}
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+      {/* 统计卡片网格 - 移动端优化 */}
+      <div className="grid grid-cols-3 sm:grid-cols-3 md:grid-cols-6 gap-2 sm:gap-4">
         {statCards.map((card) => (
           <div 
             key={card.label}
-            className={`${card.bgColor} ${card.borderColor} border rounded-xl p-4 transition-all hover:shadow-md`}
+            className={`${card.bgColor} ${card.borderColor} border rounded-lg sm:rounded-xl p-2 sm:p-4 transition-all hover:shadow-md`}
           >
-            <div className="flex items-center gap-3">
-              <span className="text-2xl">{card.icon}</span>
-              <div>
-                <p className={`text-2xl font-bold ${card.textColor}`}>{card.value}</p>
-                <p className="text-xs text-gray-500 font-medium">{card.label}</p>
+            <div className="flex flex-col sm:flex-row items-center sm:items-center gap-1 sm:gap-3 text-center sm:text-left">
+              <span className="text-lg sm:text-2xl order-1">{card.icon}</span>
+              <div className="order-2 sm:order-2">
+                <p className={`text-lg sm:text-2xl font-bold ${card.textColor}`}>{card.value}</p>
+                <p className="text-[10px] sm:text-xs text-gray-500 font-medium hidden sm:block">{card.label}</p>
+                <p className="text-[10px] text-gray-500 font-medium sm:hidden">{card.label.slice(0, 2)}</p>
               </div>
             </div>
           </div>
         ))}
       </div>
 
-      {/* 完成率展示 */}
+      {/* 完成率展示 - 移动端堆叠 */}
       {stats.total > 0 && (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
           {/* 进度条卡片 */}
-          <div className="bg-white rounded-xl border border-gray-200 p-6 shadow-sm">
-            <h3 className="text-lg font-semibold text-gray-800 mb-4">任务完成率</h3>
-            <div className="flex items-center gap-6">
-              <div className="relative w-24 h-24">
+          <div className="bg-white rounded-lg sm:rounded-xl border border-gray-200 p-4 sm:p-6 shadow-sm">
+            <h3 className="text-base sm:text-lg font-semibold text-gray-800 mb-3 sm:mb-4">任务完成率</h3>
+            <div className="flex items-center gap-4 sm:gap-6">
+              <div className="relative w-20 h-20 sm:w-24 sm:h-24 flex-shrink-0">
                 <svg className="w-full h-full transform -rotate-90">
                   <circle
-                    cx="48"
-                    cy="48"
-                    r="40"
+                    cx="50%"
+                    cy="50%"
+                    r="40%"
                     stroke="#e5e7eb"
                     strokeWidth="8"
                     fill="none"
                   />
                   <circle
-                    cx="48"
-                    cy="48"
-                    r="40"
+                    cx="50%"
+                    cy="50%"
+                    r="40%"
                     stroke="#10b981"
                     strokeWidth="8"
                     fill="none"
@@ -141,16 +142,16 @@ const Statistics: React.FC = () => {
                   />
                 </svg>
                 <div className="absolute inset-0 flex items-center justify-center">
-                  <span className="text-xl font-bold text-gray-800">{stats.completionRate}%</span>
+                  <span className="text-lg sm:text-xl font-bold text-gray-800">{stats.completionRate}%</span>
                 </div>
               </div>
-              <div className="flex-1 space-y-3">
+              <div className="flex-1 space-y-2 sm:space-y-3 min-w-0">
                 <div>
-                  <div className="flex justify-between text-sm mb-1">
+                  <div className="flex justify-between text-xs sm:text-sm mb-1">
                     <span className="text-gray-600">已完成</span>
                     <span className="font-medium text-emerald-600">{stats.completed}</span>
                   </div>
-                  <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
+                  <div className="h-1.5 sm:h-2 bg-gray-100 rounded-full overflow-hidden">
                     <div 
                       className="h-full bg-emerald-500 rounded-full transition-all duration-500"
                       style={{ width: `${stats.total > 0 ? (stats.completed / stats.total) * 100 : 0}%` }}
@@ -158,11 +159,11 @@ const Statistics: React.FC = () => {
                   </div>
                 </div>
                 <div>
-                  <div className="flex justify-between text-sm mb-1">
+                  <div className="flex justify-between text-xs sm:text-sm mb-1">
                     <span className="text-gray-600">进行中</span>
                     <span className="font-medium text-gray-600">{stats.pending}</span>
                   </div>
-                  <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
+                  <div className="h-1.5 sm:h-2 bg-gray-100 rounded-full overflow-hidden">
                     <div 
                       className="h-full bg-gray-400 rounded-full transition-all duration-500"
                       style={{ width: `${stats.total > 0 ? (stats.pending / stats.total) * 100 : 0}%` }}
@@ -174,17 +175,17 @@ const Statistics: React.FC = () => {
           </div>
 
           {/* 饼图卡片 */}
-          <div className="bg-white rounded-xl border border-gray-200 p-6 shadow-sm">
-            <h3 className="text-lg font-semibold text-gray-800 mb-4">任务分布</h3>
-            <div className="h-40">
+          <div className="bg-white rounded-lg sm:rounded-xl border border-gray-200 p-4 sm:p-6 shadow-sm">
+            <h3 className="text-base sm:text-lg font-semibold text-gray-800 mb-3 sm:mb-4">任务分布</h3>
+            <div className="h-32 sm:h-40">
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
                   <Pie
                     data={pieData}
                     cx="50%"
                     cy="50%"
-                    innerRadius={40}
-                    outerRadius={60}
+                    innerRadius={30}
+                    outerRadius={50}
                     paddingAngle={5}
                     dataKey="value"
                   >
@@ -200,10 +201,10 @@ const Statistics: React.FC = () => {
               {pieData.map((item) => (
                 <div key={item.name} className="flex items-center gap-2">
                   <div 
-                    className="w-3 h-3 rounded-full" 
+                    className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full" 
                     style={{ backgroundColor: item.color }}
                   />
-                  <span className="text-sm text-gray-600">{item.name}</span>
+                  <span className="text-xs sm:text-sm text-gray-600">{item.name}</span>
                 </div>
               ))}
             </div>
