@@ -1,9 +1,28 @@
-import React from 'react';
+import { useMemo } from 'react';
 import { useTodoStore } from '../store/todoStore';
+import { parseISO, differenceInDays } from 'date-fns';
 
 const Statistics: React.FC = () => {
-  const getStatistics = useTodoStore(state => state.getStatistics);
-  const { total, completed, pending, dueSoon } = getStatistics();
+  // 订阅待办事项列表
+  const todos = useTodoStore(state => state.todos);
+
+  // 使用 useMemo 计算统计数据
+  const { total, completed, pending, dueSoon } = useMemo(() => {
+    const total = todos.length;
+    const completed = todos.filter(todo => todo.completed).length;
+    const pending = total - completed;
+
+    // 计算即将到期（2天内）的待办事项数量
+    const now = new Date();
+    const dueSoon = todos.filter(todo => {
+      if (todo.completed) return false;
+      const dueDate = parseISO(todo.dueDate);
+      const diffDays = differenceInDays(dueDate, now);
+      return diffDays >= 0 && diffDays <= 2;
+    }).length;
+
+    return { total, completed, pending, dueSoon };
+  }, [todos]);
 
   const stats = [
     { label: '总数', value: total, color: 'bg-blue-500', icon: '📊' },
